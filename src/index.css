@@ -1,13 +1,21 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+  .btn-heading {
+    @apply mb-4 text-2xl font-bold   font-Roboto capitalize  md:text-3xl xl:text-4xl sm:text-xl;
+  }
+
+.primary-colour{
+    @apply  bg-[#176291] ;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.primary-textcolor{
+
+@apply bg-[#176291] ;
 }
+}
+
+

@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import React from "react";
 import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Home from "./Home";
+import Blogs from "./Compontents/Blogs";
+import Login from "./Compontents/Login";
+import Register from "./Compontents/Register";
+import Siderbar from "./Compontents/Siderbar.jsx";
+import EmailVerification from "./pages/EmailVerification.jsx";
+import Dashboard from "./Compontents/Dashboard";
 
-function App() {
+
+
+
+ export default  function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <div className= 'App'>
+      
+ 
 
-export default App;
+      <Router>
+        <Routes>
+          <Route>
+            <Route path="/" element={<Home/>}/>
+            <Route path="/home" element={<Home/>}/>
+            <Route exact path="/blogs" element={<Blogs/>}/>
+            
+            <Route exact path="/login" element={<Login/>}/>
+            <Route exact path="/Register" element={<Register/>}/>
+            <Route exact path="/siderbar" element={<Siderbar/>}/>
+            <Route exact path="/emailverification" element={<EmailVerification/>}/>
+            <Route exact path="/dashboard" element={<Dashboard/>}/>
+
+          </Route>
+        </Routes>
+      </Router>
+   
+    </div>
+  )
+}
