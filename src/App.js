@@ -8,6 +8,7 @@ import Register from "./Compontents/Register";
 import Siderbar from "./Compontents/Siderbar.jsx";
 import EmailVerification from "./pages/EmailVerification.jsx";
 import Dashboard from "./Compontents/Dashboard";
+// import EmailRegister from "./Compontents/EmailRegister";
 
 
 
@@ -30,6 +31,7 @@ import Dashboard from "./Compontents/Dashboard";
             <Route exact path="/siderbar" element={<Siderbar/>}/>
             <Route exact path="/emailverification" element={<EmailVerification/>}/>
             <Route exact path="/dashboard" element={<Dashboard/>}/>
+            {/* <Route exact path="/emailverify" element={<EmailRegister/>}/> */}
 
           </Route>
         </Routes>

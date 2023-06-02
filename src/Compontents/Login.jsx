@@ -24,8 +24,7 @@ export const Login = () => {
 
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const {  userInfo } = userLogin;
+ 
 
   const {
     register,
@@ -41,12 +40,6 @@ export const Login = () => {
 
 
 
-  useEffect(() => {
-    if (userInfo) {
-      // Redirect to the desired route after successful login
-      navigate('/dashboard'); // Replace '/dashboard' with your desired route
-    }
-  }, [userInfo, navigate]);
 
   return (
     <div>

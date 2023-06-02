@@ -8,7 +8,7 @@ function Home() {
     <div>
         <ErrorBoundary fallback={<div>Something went wrong</div>}>
         <Login/>
-        <Register/>
+      
         </ErrorBoundary>
     </div>
   )
