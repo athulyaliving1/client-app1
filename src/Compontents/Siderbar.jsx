@@ -1,4 +1,7 @@
-import React from "react";
+import React,{useEffect} from "react";
+import { useDispatch, useSelector } 
+from "react-redux";
+import {  useNavigate } from "react-router-dom";
 import {
   Card,
   Typography,
@@ -21,28 +24,37 @@ import {
   PowerIcon,
 } from "@heroicons/react/24/solid";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-import { useDispatch, useSelector } from "react-redux";
 
 import { logout} from  "../features/userAction"
 
 export default function Sidebar1() {
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(0);
+  const dispatch = useDispatch();
+  const userRegister = useSelector((state) => state.userRegister);
+  const { userInfo } = userRegister;
+
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
   };
 
-  const dispatch = useDispatch();
-
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-
-
-  const logoutHandler = () => {
+    
+  
+    const handleLogout = () => {
       dispatch(logout());
-  };
+    };
+  
+    useEffect(() => {
+      if (userInfo) {
+        // Registration successful, navigate to the desired page
+        navigate('/dashboard');
+      }else{
 
+        navigate('/login');
 
+      }
+    }, [userInfo, navigate]);
   
 
   return (
@@ -192,25 +204,14 @@ export default function Sidebar1() {
           Settings
         </ListItem>
 
-{
-  userInfo && userInfo.username ? (
-    <ListItem>
-    <ListItemPrefix >
-      <PowerIcon className="h-5 w-5" />
-    </ListItemPrefix>
-    Sign in
-  </ListItem>
 
-  )  :(
 
     <ListItem>
-          <ListItemPrefix onClick={logoutHandler}>
+          <ListItemPrefix onClick={handleLogout}>
             <PowerIcon className="h-5 w-5" />
           </ListItemPrefix>
      LOG OUT
         </ListItem>
-  )
-} 
       </List>
     </Card>
   );

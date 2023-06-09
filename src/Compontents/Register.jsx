@@ -4,9 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { signup} from  "../features/userAction"
+import { signup } from "../features/userAction";
 
-import { toast } from 'react-toastify';
+
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -25,33 +25,33 @@ const schema = yup
       .max(10)
       .required(),
 
-    password: yup.string()
-    .required("Password is required")
-    .min(8, 'Password is too short - should be 8 chars minimum.'),
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(8, "Password is too short - should be 8 chars minimum."),
     confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "Passwords must match")
-    .required("Required"),
-      tandc: yup.bool() // use bool instead of boolean
-      .oneOf([true], "You must accept the terms and conditions")
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords must match")
+      .required("Required"),
+    tandc: yup
+      .bool() // use bool instead of boolean
+      .oneOf([true], "You must accept the terms and conditions"),
   })
   .required();
 
 function Register() {
-  const navigate = useNavigate()
+   
+  const navigate = useNavigate();
   const [username, setUsername] = useState();
-  const [mobile, setMobile] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-
- 
+const [mobile, setMobile] = useState();
+const [email, setEmail] = useState();
+const [password, setPassword] = useState();
 
   const dispatch = useDispatch();
+  const userRegister = useSelector((state) => state.userRegister);
+  const { loading, error, userInfo } = userRegister;
 
-    const userRegister = useSelector((state) => state.userRegister);
-    const {  userInfo } = userRegister;
 
-    console.log(userInfo)
   const {
     register,
     handleSubmit,
@@ -60,25 +60,32 @@ function Register() {
     resolver: yupResolver(schema),
   });
 
+  const submitHandler= async (data,e) => {
+    e.preventDefault();
+    console.log(data);
 
-  const submitHandler = () => {
-    dispatch(signup(username, mobile, email, password));
+    // Get the form data
+    const username = e.target.username.value;
+    const email = e.target.email.value;
+    const mobile = e.target.mobile.value;
+    const password = e.target.password.value;
 
-    console.log(username);
-  
+    // Dispatch the signup action
+    dispatch(signup(username, email, mobile, password));
   };
-useEffect(() => {
-  if (userInfo) {
-      toast.success(`welcome ${userInfo.username}`);
-      navigate('/dashboard')
-  }
-}, [navigate, userInfo]);
 
-
-
+  useEffect(() => {
+    if (userInfo) {
+      // Registration successful, navigate to the desired page
+      navigate('/login');
+    }
+  }, [userInfo, navigate]);
 
   return (
     <div>
+       {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+      {userInfo && <p>Registration successful!</p>}
       <section className="bg-white">
         <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
           <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
@@ -107,7 +114,6 @@ useEffect(() => {
               </p>
             </div>
           </section>
-          
 
           <main
             aria-label="Main"
@@ -135,8 +141,11 @@ useEffect(() => {
                   Eligendi nam dolorum aliquam, quibusdam aperiam voluptatum.
                 </p>
               </div>
-            
-              <form  onSubmit={handleSubmit(submitHandler)}  className="mt-8 grid grid-cols-6 gap-6">
+
+              <form
+                onSubmit={handleSubmit(submitHandler)}
+                className="mt-8 grid grid-cols-6 gap-6"
+              >
                 <div className="col-span-6 sm:col-span-3">
                   <label
                     htmlFor="username"
@@ -146,7 +155,8 @@ useEffect(() => {
                   </label>
 
                   <input
-                     value={username} onChange={(e) => setUsername(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     {...register("username")}
                     type="text"
                     id="username"
@@ -154,8 +164,8 @@ useEffect(() => {
                     className="  mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   />
                   <p className="text-pink-500 font-Poppins font-semibold">
-                  {errors.username?.message}
-                </p>
+                    {errors.username?.message}
+                  </p>
                 </div>
 
                 <div className="col-span-6 sm:col-span-3">
@@ -167,16 +177,17 @@ useEffect(() => {
                   </label>
 
                   <input
-                   value={mobile} onChange={(e) => setMobile(e.target.value)}
-                        {...register("mobile")}
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                    {...register("mobile")}
                     type="text"
                     id="mobilenumber"
                     name="mobile"
                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   />
                   <p className="text-pink-500 font-Poppins font-semibold">
-                  {errors.mobile?.message}
-                </p>
+                    {errors.mobile?.message}
+                  </p>
                 </div>
 
                 <div className="col-span-6">
@@ -188,7 +199,8 @@ useEffect(() => {
                   </label>
 
                   <input
-                  value={email} onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     {...register("email")}
                     type="email"
                     id="Email"
@@ -196,8 +208,8 @@ useEffect(() => {
                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   />
                   <p className="text-pink-500 font-Poppins font-semibold">
-                  {errors.email?.message}
-                </p>
+                    {errors.email?.message}
+                  </p>
                 </div>
 
                 <div className="col-span-6 sm:col-span-3">
@@ -209,16 +221,17 @@ useEffect(() => {
                   </label>
 
                   <input
-                  value={password} onChange={(e) => setPassword(e.target.value)}
-                        {...register("password")}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    {...register("password")}
                     type="password"
                     id="Password"
                     name="password"
                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   />
                   <p className="text-pink-500 font-Poppins font-semibold">
-                  {errors.password?.message}
-                </p>
+                    {errors.password?.message}
+                  </p>
                 </div>
 
                 <div className="col-span-6 sm:col-span-3">
@@ -230,30 +243,30 @@ useEffect(() => {
                   </label>
 
                   <input
-                        {...register("confirmPassword")}
+                    {...register("confirmPassword")}
                     type="password"
                     id="confirmPassword"
                     name="confirmPassword"
                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   />
                   <p className="text-pink-500 font-Poppins font-semibold">
-                  {errors.confirmPassword?.message}
-                </p>
+                    {errors.confirmPassword?.message}
+                  </p>
                 </div>
 
                 <div className="col-span-6">
                   <label htmlFor="MarketingAccept" className="flex gap-4">
                     <input
-                    {...register("tandc")}
+                      {...register("tandc")}
                       type="checkbox"
                       id="MarketingAccept"
                       name="tandc"
                       className="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
                     />
 
-                       <p className="text-pink-500 font-Poppins font-semibold">
-                  {errors.tandc?.message}
-                </p>
+                    <p className="text-pink-500 font-Poppins font-semibold">
+                      {errors.tandc?.message}
+                    </p>
                     <span className="text-sm text-gray-700">
                       I want to receive emails about events, product updates and
                       company announcements.

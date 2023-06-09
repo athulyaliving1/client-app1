@@ -24,43 +24,32 @@ function LoginPage() {
     const [mail, setMail] = useState("");
     const [password, setPassword] = useState("");
     const [errMsg, setErrMsg] = useState('')
+    // const [message, setMessage] = useState('')
   
     const dispatch = useDispatch();
-  
     const userLogin = useSelector((state) => state.userLogin);
-    const {  loading, error, userInfo } = userLogin;
+    const { loading, error, userInfo} = userLogin;
   
     useEffect(() => {
-      setErrMsg('')
-  }, [mail, password])
-
-
-    const submitHandler = async() => {
+      setErrMsg('');
       
-        dispatch(login(mail, password));
-
-        try {
-          const userData = await login({ mail, password }).unwrap()
-          dispatch(login(userData,mail));
-          setMail('')
-          setPassword('')
-          navigate('/dashboard')
-      } catch (err) {
-          if (!err?.originalStatus) {
-              // isLoading: true until timeout occurs
-              setErrMsg('No Server Response');
-          } else if (err.originalStatus === 400) {
-              setErrMsg('Missing mail or Password');
-          } else if (err.originalStatus === 401) {
-              setErrMsg('Unauthorized');
-          } else {
-              setErrMsg('Login Failed');
-          }
-          
+    }, [mail, password]);
+  
+    const submitHandler = async  (data,e) => {
+      e.preventDefault();
+      dispatch(login(mail, password));
+      console.log(data);
+    };
+  
+    useEffect(() => {
+      if (userInfo) {
+        // console.log(userInfo.token);
+        navigate('/dashboard');
+      } else if (error) {
+        setErrMsg(error);
       }
-      
-      };
-
+    }, [userInfo, error, navigate]);
+  
 
     const {
         register,
@@ -104,14 +93,14 @@ function LoginPage() {
                   <h3 className="text-center btn-heading opacity-90">
                     Sign up with your account
                   </h3>
-
                   {loading ? (
             <p>Loading...</p>
          ) : error ? (
          <p>Error: {errMsg}</p>
-      ) : userInfo ? (
-        <p>Login successful! {userInfo.email}</p>
+       ) : userInfo ? (
+        <p>Login successful! </p>
       ) : (
+    
                   <form onSubmit={handleSubmit(submitHandler)}>
                     <div className="mb-1 sm:mb-2">
                       <label
@@ -172,7 +161,7 @@ function LoginPage() {
                       </Link>
                     </p>
                   </form>
-                   )}
+      )}
                 </div>
               </div>
             </div>

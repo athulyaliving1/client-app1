@@ -6,6 +6,7 @@ import {
   userLoginReducer,
   userRegisterReducer,
   userUpdateReducer,
+  userLogoutReducer
 } from "./features/reducers/userReducers.js";
 
 
@@ -13,7 +14,7 @@ const reducer = combineReducers({
  
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
-  
+  userLogout: userLogoutReducer, // 
   userUpdate: userUpdateReducer,
 });
 

@@ -10,6 +10,9 @@ import {
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
 } from "./constants/userConstants";
+ // For example, navigate to the login page
+import { useNavigate } from 'react-router-dom';
+  
 import axios from "axios";
 import { URLDevelopment } from "../Urlhelper/Url";
 
@@ -22,7 +25,6 @@ export const login = (email, password) => async (dispatch) => {
     const config = {
       headers: {
         "Content-type": "application/json",
-
       },
     };
 
@@ -32,21 +34,22 @@ export const login = (email, password) => async (dispatch) => {
       config
     );
 
-    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-
-    localStorage.setItem("userInfo", JSON.stringify(data));
-    localStorage.setItem("usermail", email);
+    if (data.message === "success") {
+      dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+    } else {
+      throw new Error(data.message);
+    }
   } catch (error) {
+    
     dispatch({
       type: USER_LOGIN_FAIL,
       payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message,
+  });
   }
 };
-
 
 
 export const loginUser = (email, password) => async (dispatch) => {
@@ -89,17 +92,20 @@ export const loginUser = (email, password) => async (dispatch) => {
 
 
 
+export const logout = () => (dispatch) => {
+  const navigate = useNavigate();
+  // Perform any necessary cleanup or API calls if needed
+  // ...
 
-
-
-
-
-
-
-
-export const logout = () => async (dispatch) => {
-  localStorage.removeItem("userInfo");
+  // Dispatch the logout action
   dispatch({ type: USER_LOGOUT });
+
+  // Clear the user information from localStorage
+  localStorage.removeItem('userInfo');
+
+  // Redirect or navigate to the desired page
+ 
+   navigate('/login');
 };
 
 export const signup = (username, email, mobile, password) => async (dispatch) => {
@@ -121,29 +127,27 @@ export const signup = (username, email, mobile, password) => async (dispatch) =>
     );
 
 
+    if (data.message === 'success'){
+      dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
 
-    dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
-
-    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-
-    localStorage.setItem("userInfo", JSON.stringify(data));
-  } catch (error) {
-    if (error.response) {
-      // Server returned an error response
-      dispatch({
-        type: USER_REGISTER_FAIL,
-        payload:
-          error.response && error.response.message
-            ? error.response.data.message
-            : error.message,
-      });
+      dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+      // localStorage.setItem("token", data.token);
+  
+      localStorage.setItem("userInfo", JSON.stringify(data));
+    
     } else {
-      // Request failed or no response received
-      dispatch({
-        type: USER_REGISTER_FAIL,
-        payload: 'No server response kmk',
-      });
+      throw new Error(data.message);
     }
+
+  } catch (error){
+    dispatch({
+      type: USER_REGISTER_FAIL,
+      payload:
+        error.response && error.response.message
+          ? error.response.data.message
+          : error.message,
+    });
+
   }
 };
 
