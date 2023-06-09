@@ -21,6 +21,9 @@ import {
   PowerIcon,
 } from "@heroicons/react/24/solid";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { useDispatch, useSelector } from "react-redux";
+
+import { logout} from  "../features/userAction"
 
 export default function Sidebar1() {
   const [open, setOpen] = React.useState(0);
@@ -29,7 +32,23 @@ export default function Sidebar1() {
     setOpen(open === value ? 0 : value);
   };
 
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+
+  const logoutHandler = () => {
+      dispatch(logout());
+  };
+
+
+  
+
   return (
+
+
+    
     <Card className="fixed top-4 left-4 h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray">
@@ -47,7 +66,7 @@ export default function Sidebar1() {
           />
           <div className="grid place-content-center">
             <Typography variant="lead" color="blue-gray">
-              JOE
+            
             </Typography>
             <Typography variant="h5" color="blue-gray">
               Chennai
@@ -172,12 +191,26 @@ export default function Sidebar1() {
           </ListItemPrefix>
           Settings
         </ListItem>
-        <ListItem>
-          <ListItemPrefix>
+
+{
+  userInfo && userInfo.username ? (
+    <ListItem>
+    <ListItemPrefix >
+      <PowerIcon className="h-5 w-5" />
+    </ListItemPrefix>
+    Sign in
+  </ListItem>
+
+  )  :(
+
+    <ListItem>
+          <ListItemPrefix onClick={logoutHandler}>
             <PowerIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Log Out
+     LOG OUT
         </ListItem>
+  )
+} 
       </List>
     </Card>
   );

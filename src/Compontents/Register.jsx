@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {signup } from "../features/counter/counterSlice";
+import { signup} from  "../features/userAction"
+
 import { toast } from 'react-toastify';
 
 const phoneRegExp =
@@ -27,9 +28,10 @@ const schema = yup
     password: yup.string()
     .required("Password is required")
     .min(8, 'Password is too short - should be 8 chars minimum.'),
-    passwordConfirmation: yup
-      .string()
-      .oneOf([yup.ref("password"), null], "Passwords must match"),
+    confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .required("Required"),
       tandc: yup.bool() // use bool instead of boolean
       .oneOf([true], "You must accept the terms and conditions")
   })
@@ -42,13 +44,14 @@ function Register() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
+ 
 
   const dispatch = useDispatch();
 
-  const userRegister = useSelector((state) => state.userRegister);
+    const userRegister = useSelector((state) => state.userRegister);
+    const {  userInfo } = userRegister;
 
-
-
+    console.log(userInfo)
   const {
     register,
     handleSubmit,
@@ -58,15 +61,19 @@ function Register() {
   });
 
 
-const submitHandler = async () => {
-  try {
-    dispatch(signup(username,mobile,email, password));
-    
-  } catch (error) {
-    // Handle any error that occurs during the login process
-    console.error('Register error:', error);
+  const submitHandler = () => {
+    dispatch(signup(username, mobile, email, password));
+
+    console.log(username);
+  
+  };
+useEffect(() => {
+  if (userInfo) {
+      toast.success(`welcome ${userInfo.username}`);
+      navigate('/dashboard')
   }
-};
+}, [navigate, userInfo]);
+
 
 
 
@@ -132,7 +139,7 @@ const submitHandler = async () => {
               <form  onSubmit={handleSubmit(submitHandler)}  className="mt-8 grid grid-cols-6 gap-6">
                 <div className="col-span-6 sm:col-span-3">
                   <label
-                    for="username"
+                    htmlFor="username"
                     className="block text-sm font-semibold text-gray-700"
                   >
                     UH ID
@@ -153,7 +160,7 @@ const submitHandler = async () => {
 
                 <div className="col-span-6 sm:col-span-3">
                   <label
-                    for="mobilenumber"
+                    htmlFor="mobilenumber"
                     className="block text-sm font-semibold text-gray-700"
                   >
                     Mobile Number
@@ -174,7 +181,7 @@ const submitHandler = async () => {
 
                 <div className="col-span-6">
                   <label
-                    for="Email"
+                    htmlFor="Email"
                     className="block text-sm font-semibold text-gray-700"
                   >
                     Email
@@ -195,7 +202,7 @@ const submitHandler = async () => {
 
                 <div className="col-span-6 sm:col-span-3">
                   <label
-                    for="Password"
+                    htmlFor="Password"
                     className="block text-sm font-semibold text-gray-700"
                   >
                     Password
@@ -216,26 +223,26 @@ const submitHandler = async () => {
 
                 <div className="col-span-6 sm:col-span-3">
                   <label
-                    for="PasswordConfirmation"
+                    htmlFor="PasswordConfirmation"
                     className="block text-sm font-semibold text-gray-700"
                   >
                     Password Confirmation
                   </label>
 
                   <input
-                        {...register("passwordConfirmation")}
+                        {...register("confirmPassword")}
                     type="password"
-                    id="PasswordConfirmation"
-                    name="password_confirmation"
+                    id="confirmPassword"
+                    name="confirmPassword"
                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   />
                   <p className="text-pink-500 font-Poppins font-semibold">
-                  {errors.passwordConfirmation?.message}
+                  {errors.confirmPassword?.message}
                 </p>
                 </div>
 
                 <div className="col-span-6">
-                  <label for="MarketingAccept" className="flex gap-4">
+                  <label htmlFor="MarketingAccept" className="flex gap-4">
                     <input
                     {...register("tandc")}
                       type="checkbox"
