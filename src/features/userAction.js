@@ -18,7 +18,7 @@ import { URLDevelopment } from "../Urlhelper/Url";
 
 
 
-export const login = (email, password) => async (dispatch) => {
+export const login = (uhid, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_LOGIN_REQUEST });
 
@@ -30,12 +30,14 @@ export const login = (email, password) => async (dispatch) => {
 
     const { data } = await axios.post(
       `${URLDevelopment}login`,
-      { email, password },
+      { uhid, password },
       config
     );
 
     if (data.message === "success") {
       dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+      localStorage.setItem("userInfo", JSON.stringify(data));
+
     } else {
       throw new Error(data.message);
     }
@@ -52,7 +54,7 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 
-export const loginUser = (email, password) => async (dispatch) => {
+export const loginUser = (uhid, password) => async (dispatch) => {
   try {
     dispatch({ type: 'USER_LOGIN_REQUEST' });
 
@@ -64,7 +66,7 @@ export const loginUser = (email, password) => async (dispatch) => {
 
     const { data } = await axios.post(
       `${URLDevelopment}login`,
-      { email, password },
+      { uhid, password },
       config
     );
 
@@ -75,7 +77,7 @@ export const loginUser = (email, password) => async (dispatch) => {
       // Store the token in local storage
       localStorage.setItem('token', data.token);
     } else {
-      dispatch({ type: 'USER_LOGIN_FAIL', payload: 'Invalid email or password' });
+      dispatch({ type: 'USER_LOGIN_FAIL', payload: 'Invalid uhid or password' });
     }
   } catch (error) {
     dispatch({

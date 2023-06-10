@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -7,61 +7,56 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { login } from "../features/userAction";
 
-
-
 const schema = yup
-.object({
-  mail: yup.string().required("Mobile Number/ UHID is required").min(3),
-  password: yup
-    .string()
-    .required("Password is required")
-    .min(8, "Password is too short - should be 8 chars minimum."),
-})
-.required();
+  .object({
+    uhid: yup.string().required("UHID is required").min(3),
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(8, "Password is too short - should be 8 chars minimum."),
+  })
+  .required();
 
 function LoginPage() {
-    const navigate = useNavigate()
-    const [mail, setMail] = useState("");
-    const [password, setPassword] = useState("");
-    const [errMsg, setErrMsg] = useState('')
-    // const [message, setMessage] = useState('')
-  
-    const dispatch = useDispatch();
-    const userLogin = useSelector((state) => state.userLogin);
-    const { loading, error, userInfo} = userLogin;
-  
-    useEffect(() => {
-      setErrMsg('');
-      
-    }, [mail, password]);
-  
-    const submitHandler = async  (data,e) => {
-      e.preventDefault();
-      dispatch(login(mail, password));
-      console.log(data);
-    };
-  
-    useEffect(() => {
-      if (userInfo) {
-        // console.log(userInfo.token);
-        navigate('/dashboard');
-      } else if (error) {
-        setErrMsg(error);
-      }
-    }, [userInfo, error, navigate]);
-  
+  const navigate = useNavigate();
+  const [uhid, setUhid] = useState("");
+  const [password, setPassword] = useState("");
+  const [errMsg, setErrMsg] = useState("");
+  // const [message, setMessage] = useState('')
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-      } = useForm({
-        resolver: yupResolver(schema),
-      });
+  const dispatch = useDispatch();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error, userInfo } = userLogin;
+
+  useEffect(() => {
+    setErrMsg("");
+  }, [uhid, password]);
+
+  const submitHandler = async (data, e) => {
+    e.preventDefault();
+    dispatch(login(uhid, password));
+    console.log(data);
+  };
+
+  useEffect(() => {
+    if (userInfo) {
+      // console.log(userInfo.token);
+      navigate("/dashboard");
+    } else if (error) {
+      setErrMsg(error);
+    }
+  }, [userInfo, error, navigate]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   return (
-<div>
-    
+    <div>
       <div className="">
         <div
           className="
@@ -94,74 +89,73 @@ function LoginPage() {
                     Sign up with your account
                   </h3>
                   {loading ? (
-            <p>Loading...</p>
-         ) : error ? (
-         <p>Error: {errMsg}</p>
-       ) : userInfo ? (
-        <p>Login successful! </p>
-      ) : (
-    
-                  <form onSubmit={handleSubmit(submitHandler)}>
-                    <div className="mb-1 sm:mb-2">
-                      <label
-                        htmlFor="mail"
-                        className="inline-block mb-1 font-bold "
-                      >
-                        Mobile / UH ID
-                      </label>
-                      <input
-                        {...register("mail")}
-                        value={mail}
-                        onChange={(e) => setMail(e.target.value)}
-                        placeholder="9876543210 / ATH-CH ARM-00001"
-                        type="text"
-                        className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                        id="mail"
-                        name="mail"
-                      />
-                      <p className="font-semibold text-pink-500 font-Poppins">
-                        {errors.mail?.message}
-                      </p>
-                    </div>
-                    <div className="mb-1 sm:mb-2">
-                      <label
-                        htmlFor="password"
-                        className="inline-block mb-1 font-bold"
-                      >
-                        Password
-                      </label>
-                      <input
-                        {...register("password")}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="***********"
-                        type="password"
-                        className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                        id="password"
-                        name="password"
-                      />
-                      <p className="font-semibold text-pink-500 font-Poppins">
-                        {errors.password?.message}
-                      </p>
-                    </div>
-                    <div className="mt-4 mb-2 sm:mb-4">
-                      <button
-                        type="submit"
-                        className="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md border-[#176291] bg-[#176291] focus:shadow-outline focus:outline-none"
-                      >
-                        Submit
-                      </button>
-                    </div>
-                    <p className="text-xs text-gray-600 sm:text-sm">
-                      Don't have an account?
-                      <Link to="/register">
-                        <button className="underline underline-offset-1">
-                          Sign up
+                    <p>Loading...</p>
+                  ) : error ? (
+                    <p>Error: {errMsg}</p>
+                  ) : userInfo ? (
+                    <p>Login successful! </p>
+                  ) : (
+                    <form onSubmit={handleSubmit(submitHandler)}>
+                      <div className="mb-1 sm:mb-2">
+                        <label
+                          htmlFor="uhid"
+                          className="inline-block mb-1 font-bold "
+                        >
+                          Mobile / UH ID
+                        </label>
+                        <input
+                          {...register("uhid")}
+                          value={uhid}
+                          onChange={(e) => setUhid(e.target.value)}
+                          placeholder="9876543210 / ATH-CH ARM-00001"
+                          type="text"
+                          className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
+                          id="uhid"
+                          name="uhid"
+                        />
+                        <p className="font-semibold text-pink-500 font-Poppins">
+                          {errors.uhid?.message}
+                        </p>
+                      </div>
+                      <div className="mb-1 sm:mb-2">
+                        <label
+                          htmlFor="password"
+                          className="inline-block mb-1 font-bold"
+                        >
+                          Password
+                        </label>
+                        <input
+                          {...register("password")}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="***********"
+                          type="password"
+                          className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
+                          id="password"
+                          name="password"
+                        />
+                        <p className="font-semibold text-pink-500 font-Poppins">
+                          {errors.password?.message}
+                        </p>
+                      </div>
+                      <div className="mt-4 mb-2 sm:mb-4">
+                        <button
+                          type="submit"
+                          className="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md border-[#176291] bg-[#176291] focus:shadow-outline focus:outline-none"
+                        >
+                          Submit
                         </button>
-                      </Link>
-                    </p>
-                  </form>
-      )}
+                      </div>
+                      <p className="text-xs text-gray-600 sm:text-sm">
+                        Don't have an account?
+                        <Link to="/register">
+                          <button className="underline underline-offset-1">
+                            Sign up
+                          </button>
+                        </Link>
+                      </p>
+                    </form>
+                  )}
                 </div>
               </div>
             </div>
@@ -169,7 +163,7 @@ function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default LoginPage
+export default LoginPage;

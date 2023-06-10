@@ -49,10 +49,6 @@ export default function Sidebar1() {
       if (userInfo) {
         // Registration successful, navigate to the desired page
         navigate('/dashboard');
-      }else{
-
-        navigate('/login');
-
       }
     }, [userInfo, navigate]);
   
