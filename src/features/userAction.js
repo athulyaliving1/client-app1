@@ -10,51 +10,50 @@ import {
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
 } from "./constants/userConstants";
- // For example, navigate to the login page
-import { useNavigate } from 'react-router-dom';
-  
+// For example, navigate to the login page
+
+
 import axios from "axios";
 import { URLDevelopment } from "../Urlhelper/Url";
 
 
+// export const login = (uhid, password) => async (dispatch) => {
+//   try {
+//     dispatch({ type: USER_LOGIN_REQUEST });
+
+//     const config = {
+//       headers: {
+//         "Content-type": "application/json",
+//       },
+//     };
+
+//     const { data } = await axios.post(
+//       `${URLDevelopment}login`,
+//       { uhid, password },
+//       config
+//     );
+
+//     if (data.message === "success") {
+//       dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+//       localStorage.setItem("userInfo", JSON.stringify(data));
+
+//     } else {
+//       throw new Error(data.message);
+//     }
+//   } catch (error) {
+
+//     dispatch({
+//       type: USER_LOGIN_FAIL,
+//       payload:
+//         error.response && error.response.data.message
+//           ? error.response.data.message
+//           : error.message,
+//     });
+//   }
+// };
+
 
 export const login = (uhid, password) => async (dispatch) => {
-  try {
-    dispatch({ type: USER_LOGIN_REQUEST });
-
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-    };
-
-    const { data } = await axios.post(
-      `${URLDevelopment}login`,
-      { uhid, password },
-      config
-    );
-
-    if (data.message === "success") {
-      dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-      localStorage.setItem("userInfo", JSON.stringify(data));
-
-    } else {
-      throw new Error(data.message);
-    }
-  } catch (error) {
-    
-    dispatch({
-      type: USER_LOGIN_FAIL,
-      payload:
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message,
-  });
-  }
-};
-
-
-export const loginUser = (uhid, password) => async (dispatch) => {
   try {
     dispatch({ type: 'USER_LOGIN_REQUEST' });
 
@@ -72,10 +71,18 @@ export const loginUser = (uhid, password) => async (dispatch) => {
 
     // Check the response message for success
     if (data.message === 'success') {
-      dispatch({ type: 'USER_LOGIN_SUCCESS', payload: data.token });
+      dispatch({
+        type: 'USER_LOGIN_SUCCESS', payload: {
+          token: data.token,
+          uhid: data.uhid,
+          message: 'success',
+        }
+      });
 
       // Store the token in local storage
-      localStorage.setItem('token', data.token);
+      // localStorage.setItem('token', data.token);
+      localStorage.setItem("userInfo", JSON.stringify(data));
+
     } else {
       dispatch({ type: 'USER_LOGIN_FAIL', payload: 'Invalid uhid or password' });
     }
@@ -92,25 +99,15 @@ export const loginUser = (uhid, password) => async (dispatch) => {
 
 
 
+// userActions.js
 
-
-export const logout = () => (dispatch) => {
-  const navigate = useNavigate();
-  // Perform any necessary cleanup or API calls if needed
-  // ...
-
-  // Dispatch the logout action
+export const logout = () => async (dispatch) => {
+  localStorage.removeItem("userInfo");
   dispatch({ type: USER_LOGOUT });
-
-  // Clear the user information from localStorage
-  localStorage.removeItem('userInfo');
-
-  // Redirect or navigate to the desired page
- 
-   navigate('/login');
 };
 
-export const signup = (username, email, mobile, password) => async (dispatch) => {
+
+export const signup = (uhid, email, mobile, password) => async (dispatch) => {
 
   try {
     dispatch({ type: USER_REGISTER_REQUEST });
@@ -123,25 +120,25 @@ export const signup = (username, email, mobile, password) => async (dispatch) =>
 
     const { data } = await axios.post(
       `${URLDevelopment}register`,
-      { username, email, mobile, password },
+      { uhid, email, mobile, password },
       config
 
     );
 
 
-    if (data.message === 'success'){
+    if (data.message === 'success') {
       dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
 
       dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
       // localStorage.setItem("token", data.token);
-  
+
       localStorage.setItem("userInfo", JSON.stringify(data));
-    
+
     } else {
       throw new Error(data.message);
     }
 
-  } catch (error){
+  } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
       payload:
@@ -185,3 +182,6 @@ export const updateProfile = (user) => async (dispatch, getState) => {
     });
   }
 };
+
+
+

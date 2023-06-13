@@ -20,14 +20,14 @@ import {
 
 
   
-  export const userLoginReducer = (state = {error: ''}, action) => {
+  export const userLoginReducer = (state = { token: null, user: null, loading: false, error: null }, action) => {
     switch (action.type) {
       case USER_LOGIN_REQUEST:
         return { loading: true };
       case USER_LOGIN_SUCCESS:
-        return { loading: false, userInfo: action.payload,error: ''};
+        return { ...state, loading: false, token: action.payload.token, user: action.payload.user, error: null };
       case USER_LOGIN_FAIL:
-        return { loading: false, error: action.payload};
+        return { ...state, loading: false, token: null, user: null, error: action.payload };
       case USER_LOGOUT:
         return { ...state, token: null, loading: false, error: null };
       default:
@@ -90,3 +90,21 @@ import {
         return state;
     }
   };
+
+
+export const usergetReducer = (state = { authData: null, loading: false, error: false }, action) => {
+
+
+  switch (action.type) {
+    case "AUTH_START":
+      return { ...state, loading: true, error: false }
+    case "AUTH_SUCCESS":
+      localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
+      return { ...state, authData: action.data, loading: false, error: false };
+    case "AUTH_FAIL":
+      return { ...state, loading: false, error: true };
+    default:
+      return state;
+  }
+
+}

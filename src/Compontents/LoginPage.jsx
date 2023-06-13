@@ -4,8 +4,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
 import { login } from "../features/userAction";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+// import ErrorMsg from './../Utilltes/ErrorMsg';
+
 
 const schema = yup
   .object({
@@ -21,16 +24,16 @@ function LoginPage() {
   const navigate = useNavigate();
   const [uhid, setUhid] = useState("");
   const [password, setPassword] = useState("");
-  const [errMsg, setErrMsg] = useState("");
+  // const [errMsg, setErrMsg] = useState("");
   // const [message, setMessage] = useState('')
 
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
+  const { loading, error, userInfo, message } = userLogin;
 
-  useEffect(() => {
-    setErrMsg("");
-  }, [uhid, password]);
+  // useEffect(() => {
+  //   setErrMsg("");
+  // }, [uhid, password]);
 
   const submitHandler = async (data, e) => {
     e.preventDefault();
@@ -41,11 +44,13 @@ function LoginPage() {
   useEffect(() => {
     if (userInfo) {
       // console.log(userInfo.token);
-      navigate("/dashboard");
+      navigate("/siderbar");
+      toast.success(message);
     } else if (error) {
-      setErrMsg(error);
+      // setErrMsg(error);
+      toast.error(error);
     }
-  }, [userInfo, error, navigate]);
+  }, [userInfo, error, navigate, message, loading]);
 
   const {
     register,
@@ -88,80 +93,76 @@ function LoginPage() {
                   <h3 className="text-center btn-heading opacity-90">
                     Sign up with your account
                   </h3>
-                  {loading ? (
-                    <p>Loading...</p>
-                  ) : error ? (
-                    <p>Error: {errMsg}</p>
-                  ) : userInfo ? (
-                    <p>Login successful! </p>
-                  ) : (
-                    <form onSubmit={handleSubmit(submitHandler)}>
-                      <div className="mb-1 sm:mb-2">
-                        <label
-                          htmlFor="uhid"
-                          className="inline-block mb-1 font-bold "
-                        >
-                          Mobile / UH ID
-                        </label>
-                        <input
-                          {...register("uhid")}
-                          value={uhid}
-                          onChange={(e) => setUhid(e.target.value)}
-                          placeholder="9876543210 / ATH-CH ARM-00001"
-                          type="text"
-                          className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                          id="uhid"
-                          name="uhid"
-                        />
-                        <p className="font-semibold text-pink-500 font-Poppins">
-                          {errors.uhid?.message}
-                        </p>
-                      </div>
-                      <div className="mb-1 sm:mb-2">
-                        <label
-                          htmlFor="password"
-                          className="inline-block mb-1 font-bold"
-                        >
-                          Password
-                        </label>
-                        <input
-                          {...register("password")}
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          placeholder="***********"
-                          type="password"
-                          className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                          id="password"
-                          name="password"
-                        />
-                        <p className="font-semibold text-pink-500 font-Poppins">
-                          {errors.password?.message}
-                        </p>
-                      </div>
-                      <div className="mt-4 mb-2 sm:mb-4">
-                        <button
-                          type="submit"
-                          className="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md border-[#176291] bg-[#176291] focus:shadow-outline focus:outline-none"
-                        >
-                          Submit
-                        </button>
-                      </div>
-                      <p className="text-xs text-gray-600 sm:text-sm">
-                        Don't have an account?
-                        <Link to="/register">
-                          <button className="underline underline-offset-1">
-                            Sign up
-                          </button>
-                        </Link>
+
+                  {/* Same as */}
+
+                  <form onSubmit={handleSubmit(submitHandler)}>
+                    <div className="mb-1 sm:mb-2">
+                      <label
+                        htmlFor="uhid"
+                        className="inline-block mb-1 font-bold "
+                      >
+                        Mobile / UH ID
+                      </label>
+                      <input
+                        {...register("uhid")}
+                        value={uhid}
+                        onChange={(e) => setUhid(e.target.value)}
+                        placeholder="9876543210 / ATH-CH ARM-00001"
+                        type="text"
+                        className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
+                        id="uhid"
+                        name="uhid"
+                      />
+                      <p className="font-semibold text-pink-500 font-Poppins">
+                        {errors.uhid?.message}
                       </p>
-                    </form>
-                  )}
+                    </div>
+                    <div className="mb-1 sm:mb-2">
+                      <label
+                        htmlFor="password"
+                        className="inline-block mb-1 font-bold"
+                      >
+                        Password
+                      </label>
+                      <input
+                        {...register("password")}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="***********"
+                        type="password"
+                        className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
+                        id="password"
+                        name="password"
+                      />
+                      <p className="font-semibold text-pink-500 font-Poppins">
+                        {errors.password?.message}
+                      </p>
+                    </div>
+                    <div className="mt-4 mb-2 sm:mb-4">
+                      <button
+                        type="submit"
+                        className="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md border-[#176291] bg-[#176291] focus:shadow-outline focus:outline-none"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-600 sm:text-sm">
+                      Don't have an account?
+                      <Link to="/register">
+                        <button className="underline underline-offset-1">
+                          Sign up
+                        </button>
+                      </Link>
+                    </p>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

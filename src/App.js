@@ -10,12 +10,12 @@ import EmailVerification from "./pages/EmailVerification.jsx";
 import Dashboard from "./Compontents/Dashboard";
 import {  useSelector } from "react-redux";
 // import EmailRegister from "./Compontents/EmailRegister";
-import { login } from "./features/userAction";
-
+import "react-toastify/dist/ReactToastify.css";
 
 
  export default  function App() {
   const userLogin = useSelector((state) => state.userLogin);
+
   const { userInfo } = userLogin;
   return (
     <div className= 'App'>

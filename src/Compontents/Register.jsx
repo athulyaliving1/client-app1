@@ -5,15 +5,15 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signup } from "../features/userAction";
-
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const schema = yup
   .object({
-    username: yup.string().required().min(3),
+    uhid: yup.string().required().min(3),
     email: yup
       .string()
       .email("That doesn't look like a valid email")
@@ -40,17 +40,15 @@ const schema = yup
   .required();
 
 function Register() {
-   
   const navigate = useNavigate();
-  const [username, setUsername] = useState();
-const [mobile, setMobile] = useState();
-const [email, setEmail] = useState();
-const [password, setPassword] = useState();
+  const [uhid, setUhid] = useState();
+  const [mobile, setMobile] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
 
   const dispatch = useDispatch();
   const userRegister = useSelector((state) => state.userRegister);
   const { loading, error, userInfo } = userRegister;
-
 
   const {
     register,
@@ -60,30 +58,34 @@ const [password, setPassword] = useState();
     resolver: yupResolver(schema),
   });
 
-  const submitHandler= async (data,e) => {
+  const submitHandler = async (data, e) => {
     e.preventDefault();
     console.log(data);
 
     // Get the form data
-    const username = e.target.username.value;
+    const uhid = e.target.uhid.value;
     const email = e.target.email.value;
     const mobile = e.target.mobile.value;
     const password = e.target.password.value;
 
     // Dispatch the signup action
-    dispatch(signup(username, email, mobile, password));
+    dispatch(signup(uhid, email, mobile, password));
   };
 
   useEffect(() => {
     if (userInfo) {
       // Registration successful, navigate to the desired page
-      navigate('/login');
-    }
-  }, [userInfo, navigate]);
+      toast.success("Registration successful!");
 
+      navigate("/login");
+      // Show success toast
+    } else if (error) {
+      toast.error("Registration failed."); // Show error toast
+    }
+  }, [userInfo, error, navigate]);
   return (
     <div>
-       {loading && <p>Loading...</p>}
+      {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
       {userInfo && <p>Registration successful!</p>}
       <section className="bg-white">
@@ -148,23 +150,23 @@ const [password, setPassword] = useState();
               >
                 <div className="col-span-6 sm:col-span-3">
                   <label
-                    htmlFor="username"
+                    htmlFor="uhid"
                     className="block text-sm font-semibold text-gray-700"
                   >
                     UH ID
                   </label>
 
                   <input
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    {...register("username")}
+                    value={uhid}
+                    onChange={(e) => setUhid(e.target.value)}
+                    {...register("uhid")}
                     type="text"
-                    id="username"
-                    name="username"
+                    id="uhid"
+                    name="uhid"
                     className="  mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                   />
                   <p className="text-pink-500 font-Poppins font-semibold">
-                    {errors.username?.message}
+                    {errors.uhid?.message}
                   </p>
                 </div>
 
@@ -306,6 +308,7 @@ const [password, setPassword] = useState();
           </main>
         </div>
       </section>
+      <ToastContainer />
     </div>
   );
 }
