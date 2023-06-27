@@ -10,6 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 // import ErrorMsg from './../Utilltes/ErrorMsg';
 
 
+
+
 const schema = yup
   .object({
     uhid: yup.string().required("UHID is required").min(3),
@@ -43,8 +45,8 @@ function LoginPage() {
 
   useEffect(() => {
     if (userInfo) {
-      // console.log(userInfo.token);
-      navigate("/siderbar");
+      console.log(userInfo.token);
+      navigate("/dashboard"); 
       toast.success(message);
     } else if (error) {
       // setErrMsg(error);

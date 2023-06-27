@@ -1,6 +1,8 @@
-import React,{useEffect} from "react";
-import { useDispatch,useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 import {
   Card,
   Typography,
@@ -27,30 +29,32 @@ import { ToastContainer, toast } from "react-toastify";
 import { logout } from "../features/userAction";
 import Footer from "./Footer";
 
+export default function Sidebar1(
 
-export default function Sidebar1() {
+
+
+  
+) {
   const navigate = useNavigate();
-  const userRegister = useSelector((state) => state.userRegister);
-  const { userInfo } = userRegister;
   const [open, setOpen] = React.useState(0);
   const dispatch = useDispatch();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    // Retrieve user data from local storage
+    const userDataFromLocalStorage = JSON.parse(
+      localStorage.getItem("userData")
+    );
+
+    // Set user data to state
+    setUserData(userDataFromLocalStorage);
+  }, []);
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
   };
 
   const notify = () => toast("Wow so easy !");
-
-  useEffect(() => {
-    const storedUserInfo = localStorage.getItem("userInfo.message");
-    if (!userInfo || !storedUserInfo) {
-
-      navigate("/login");
-    } else {
-      toast.success("login success");
-    }
-  }, [navigate, userInfo]);
-
 
   const handleLogout = () => {
     // Clear local storage
@@ -61,8 +65,6 @@ export default function Sidebar1() {
     // Dispatch the logout action
     dispatch(logout());
   };
-
-
 
   return (
     <div>
@@ -83,9 +85,7 @@ export default function Sidebar1() {
             />
             <div className="grid place-content-center">
               <Typography variant="lead" color="blue-gray"></Typography>
-              <Typography variant="h5" color="blue-gray">
-                Chennai
-              </Typography>
+              <Typography variant="h5" color="blue-gray"></Typography>
             </div>
           </div>
         </div>
@@ -194,12 +194,22 @@ export default function Sidebar1() {
               />
             </ListItemSuffix>
           </ListItem>
-          <ListItem>
-            <ListItemPrefix>
-              <UserCircleIcon className="h-5 w-5" />
-            </ListItemPrefix>
-            Profile
-          </ListItem>
+          <Link to="/profilepage">
+            <ListItem>
+              <ListItemPrefix>
+                <UserCircleIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              Profile
+            </ListItem>
+          </Link>
+          <Link to="/clientvitals">
+            <ListItem>
+              <ListItemPrefix>
+                <UserCircleIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              Vitals 
+            </ListItem>
+          </Link>
           <ListItem>
             <ListItemPrefix>
               <Cog6ToothIcon className="h-5 w-5" />

@@ -6,8 +6,14 @@ import {
   userLoginReducer,
   userRegisterReducer,
   userUpdateReducer,
-  userLogoutReducer
+  userLogoutReducer,
+  userReducer,
+  localStorageReducer,
+  vitalsReducer,
+  foodMenuReducer,
+  authReducer
 } from "./features/reducers/userReducers.js";
+
 
 
 const reducer = combineReducers({
@@ -16,6 +22,11 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   userLogout: userLogoutReducer, // 
   userUpdate: userUpdateReducer,
+  user: userReducer,
+  localStorage: localStorageReducer,
+  vitals: vitalsReducer,
+  foodMenu: foodMenuReducer,
+  auth: authReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

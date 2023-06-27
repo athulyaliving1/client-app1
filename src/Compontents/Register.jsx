@@ -72,17 +72,17 @@ function Register() {
     dispatch(signup(uhid, email, mobile, password));
   };
 
-  useEffect(() => {
+  useEffect((navigate) => {
     if (userInfo) {
       // Registration successful, navigate to the desired page
       toast.success("Registration successful!");
 
       navigate("/login");
       // Show success toast
-    } else if (error) {
-      toast.error("Registration failed."); // Show error toast
+
     }
   }, [userInfo, error, navigate]);
+  
   return (
     <div>
       {loading && <p>Loading...</p>}
